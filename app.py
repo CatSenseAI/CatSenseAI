@@ -346,15 +346,11 @@ with tab3:
 
 
   
-
 with tab4:
     st.subheader("🤖 Consultoría Estratégica CatSense")
     st.info("Este agente tiene acceso a las métricas del periodo seleccionado y a las quejas de mayor urgencia.")
 
     # 1. CONFIGURACIÓN DE LA API (Para local)
-    # Si aún no configuras st.secrets, puedes poner tu clave temporalmente aquí:
-    # client = openai.OpenAI(api_key="TU_OPENAI_API_KEY")
-    # Pero lo ideal es usar st.secrets para que sea seguro:
     try:
         client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
     except:
@@ -365,7 +361,7 @@ with tab4:
     # Resumen de métricas de la tabla maestra
     contexto_metrizado = resumen.to_string()
     
-    # Muestreo de las 10 reseñas más críticas (Urgencia 5) para que la IA las cite
+    # Muestreo de las 12 reseñas más críticas (Urgencia 4-5) para que la IA las cite
     muestreo_critico = df_filtered[df_filtered['urgency_level'] >= 4][['brand', 'specific_aspect', 'review']].head(12).to_string()
 
     # 3. EL SYSTEM PROMPT "BLINDADO"
@@ -420,22 +416,23 @@ REGLAS DE ORO PARA TUS RESPUESTAS:
     - UTILIZA LOS BENCHMARKS: NSS >70% (Hegemonía), Churn >35% (Peligro), Riesgo Crítico >30% (Crisis Total).
     """
 
-
     # 4. LÓGICA DEL CHAT
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    # Mostrar historial
+    # Mostrar historial (Se muestra primero para que el input quede abajo)
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    # Input del usuario
+    # Input del usuario (Anclado al fondo por Streamlit automáticamente)
     if prompt := st.chat_input("Ej: ¿Cuál es el problema principal de Cat's Best este bimestre?"):
+        # Agregar mensaje del usuario al historial
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
 
+        # Generar respuesta de la asistente
         with st.chat_message("assistant"):
             stream = client.chat.completions.create(
                 model="gpt-4o",
@@ -447,6 +444,6 @@ REGLAS DE ORO PARA TUS RESPUESTAS:
             )
             response = st.write_stream(stream)
 
+        # Guardar respuesta y refrescar para mantener el input abajo
         st.session_state.messages.append({"role": "assistant", "content": response})
-
-
+        st.rerun()
