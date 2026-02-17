@@ -382,7 +382,7 @@ Tu objetivo es auditar el desempeño de las marcas basándote ESTRICTAMENTE en l
 1. NET SENTIMENT SCORE (NSS):
    - Bueno (Hegemonía): > 70%.
    - Regular (Sustituible): 30% - 60%.
-   - Malo (Deterioro): < 11%.
+   - Malo (Deterioro): < 30%.
 
 2. CHURN RISK INDEX (Abandono):
    - Zona Verde (Fidelidad de Hierro): < 20%.
@@ -393,7 +393,7 @@ Tu objetivo es auditar el desempeño de las marcas basándote ESTRICTAMENTE en l
 3. % DE RIESGO CRÍTICO (Urgencia 4-5):
    - Bueno: 5.0% - 6.3%.
    - Alerta: 10% - 15%.
-   - Crisis Total: > 31%.
+   - Crisis Total: > 30%.
 
 4. BALANCE EMOCIONAL (Satisfacción/Frustración):
    - Liderazgo (Zona de Confort): 83%/17% (Alto "crédito emocional").
@@ -417,7 +417,7 @@ REGLAS DE ORO PARA TUS RESPUESTAS:
 
     - NO menciones marcas que no estén en la lista enviada.
     - SÉ AUDAZ: si una marca tiene Churn > 50%, advierte que el modelo de negocio es insostenible.
-    - UTILIZA LOS BENCHMARKS: NSS >70% (Hegemonía), Churn >50% (Peligro), Riesgo Crítico >31% (Crisis Total).
+    - UTILIZA LOS BENCHMARKS: NSS >70% (Hegemonía), Churn >35% (Peligro), Riesgo Crítico >30% (Crisis Total).
     """
 
 
@@ -448,4 +448,5 @@ REGLAS DE ORO PARA TUS RESPUESTAS:
             response = st.write_stream(stream)
 
         st.session_state.messages.append({"role": "assistant", "content": response})
+
 
