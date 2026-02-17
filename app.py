@@ -327,7 +327,7 @@ with tab3:
             y='brand', 
             color='emo_c', 
             orientation='h',
-            color_discrete_map={'Satisfacción': '#cddd9d', 'Frustración': '#e57373'},
+            color_discrete_map={'Satisfacción': '#27AE60', 'Frustración': '#E74C3C'},
             text_auto='.1f', 
             template='plotly_white',
             labels={
@@ -443,4 +443,5 @@ REGLAS DE ORO PARA TUS RESPUESTAS:
                 stream=True,
             )
             response = st.write_stream(stream)
+
         st.session_state.messages.append({"role": "assistant", "content": response})
