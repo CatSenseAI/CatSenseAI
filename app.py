@@ -140,6 +140,7 @@ with tab1:
         Total_Reseñas=('review', 'count'),
         Rating_Promedio=('rating', 'mean'),
         Sentiment_Score_Avg=('sentiment_score', 'mean'),
+        NSS=('sentimiento_cat', calcular_nss_val), # <--- ¡Perfecto, ya está aquí!
         Loyalty_Index=('repurchase_intent', lambda x: (x.sum() / x.count()) * 100),
         Foco_Operativo=('root_cause', lambda x: x.mode()[0] if not x.mode().empty else "N/A")
     ).reset_index()
@@ -151,13 +152,15 @@ with tab1:
     criticos = df_filtered[df_filtered['urgency_level'] >= 4].groupby('brand').size()
     resumen['%_Riesgo_Critico'] = resumen['brand'].map((criticos / df_filtered.groupby('brand').size() * 100).fillna(0))
 
-    # 2. Mostrar Tabla con Estilo (Asegúrate de que la indentación sea de 4 espacios)
+    # 2. MOSTRAR TABLA (Corregida la indentación)
     st.dataframe(
         resumen.rename(columns={'brand':'Marca', 'Sentiment_Score_Avg':'Índice Sent.'}).style
+        .background_gradient(subset=['NSS'], cmap='RdYlGn', vmin=0, vmax=100)
         .background_gradient(subset=['Índice Sent.', 'Rating_Promedio'], cmap='RdYlGn')
         .background_gradient(subset=['Loyalty_Index'], cmap='Greens')
         .background_gradient(subset=['%_Riesgo_Critico'], cmap='Reds') 
         .format({
+            'NSS': '{:.1f}%', 
             'Loyalty_Index': '{:.1f}%', 
             '%_Riesgo_Critico': '{:.1f}%', 
             'Índice Sent.': '{:.2f}', 
@@ -445,3 +448,4 @@ REGLAS DE ORO PARA TUS RESPUESTAS:
             response = st.write_stream(stream)
 
         st.session_state.messages.append({"role": "assistant", "content": response})
+
